@@ -2,23 +2,23 @@
 pub struct Ingredient
 {
     pub name : String,
-    pub meat : bool,
-    pub animal_origin : bool
+    pub is_vegetarian : bool,
+    pub is_vegan : bool
 }
 
-pub struct Pizza
+pub struct Pizza<'a>
 {
     pub name : String,
-    pub ingredients : Vec<Ingredient>
+    pub ingredients : Vec<&'a Ingredient>
 }
 
-impl Pizza
+impl Pizza<'_>
 {
-    pub fn IsVegan(&self) -> bool
+    pub fn is_vegan(&self) -> bool
     {
         for ingredient in &self.ingredients
         {
-            if ingredient.animal_origin
+            if ingredient.is_vegan
             {
                 return false;
             }
@@ -26,11 +26,11 @@ impl Pizza
         return true;
     }
 
-    pub fn IsVegetarian(&self) -> bool
+    pub fn is_vegetarian(&self) -> bool
     {
         for ingredient in &self.ingredients
         {
-            if ingredient.meat
+            if ingredient.is_vegetarian
             {
                 return false;
             }
@@ -39,21 +39,21 @@ impl Pizza
     }
 }
 
-pub struct Menu
+pub struct Menu<'a>
 {
     pub name : String,
-    pub pizzas : Vec<Pizza>
+    pub pizzas : Vec<&'a Pizza<'a>>
 }
 
-impl Menu
+impl Menu<'_>
 {
-    pub fn GetVeganPizzas(&self) -> Vec<&Pizza>
+    pub fn get_vegan_pizzas(&self) -> Vec<&Pizza>
     {
         let mut vegan_pizzas : Vec<&Pizza> = Vec::new();
 
         for pizza in &self.pizzas
         {
-            if pizza.IsVegan()
+            if pizza.is_vegan()
             {
                 vegan_pizzas.push(pizza);
             }
@@ -62,13 +62,13 @@ impl Menu
         return vegan_pizzas;
     }
 
-    pub fn GetVegetarianPizzas(&self) -> Vec<&Pizza>
+    pub fn get_vegetarian_pizzas(&self) -> Vec<&Pizza>
     {
         let mut vegetarian_pizzas : Vec<&Pizza> = Vec::new();
 
         for pizza in &self.pizzas
         {
-            if pizza.IsVegetarian()
+            if pizza.is_vegetarian()
             {
                 vegetarian_pizzas.push(pizza);
             }
